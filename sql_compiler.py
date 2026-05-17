@@ -14,9 +14,10 @@ FIELD_MAPPING = {
 
 def compile_dsl_to_sql(dsl: DSLQuery) -> tuple[str, list]:
     # We select fields that exist across tables we might join
-    base_query = "SELECT DISTINCT s.id, s.symbol, s.company_name, s.sector"
+    base_query = "SELECT DISTINCT s.id, s.symbol, s.company_name, s.sector, f.pe_ratio, f.eps, f.market_cap, f.revenue_growth"
     
     joins = set()
+    joins.add("LEFT JOIN fundamentals f ON s.id = f.company_id") # Always join for results
     where_clauses = []
     params = []
 

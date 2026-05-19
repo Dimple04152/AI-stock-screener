@@ -42,10 +42,16 @@ pipeline {
         }
 
         stage('Deploy to Kubernetes') {
+            agent {
+                docker {
+                    image 'bitnami/kubectl:latest'
+                    args '-u 0'
+                }
+            }
             steps {
                 withKubeConfig([credentialsId: KUBECONFIG_CREDENTIAL_ID]) {
                     sh "kubectl apply -f k8s/"
-                    // Force rollout to pick up new images if using 'latest' tag (though build number is better)
+                    // Force rollout to pick up new images if using 'latest' tag
                     sh "kubectl rollout restart deployment/stock-backend"
                     sh "kubectl rollout restart deployment/stock-frontend"
                     sh "kubectl rollout restart deployment/llm-service"

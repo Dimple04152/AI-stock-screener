@@ -9,7 +9,7 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                git branch: 'main', url: 'https://github.com/your-repo/AI-stock-screener.git'
+                git branch: 'main', url: 'https://github.com/adityaMachal/AI-stock-screener.git'
             }
         }
 

@@ -3,7 +3,7 @@ variable "aws_region" {
 }
 
 variable "instance_type" {
-  default = "t3.small" # 2GB RAM - recommended for stable K8s clusters
+  default = "m7i-flex.large" # 8GB RAM - high performance for K8s and CI/CD
 }
 
 variable "key_name" {

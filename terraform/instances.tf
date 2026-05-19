@@ -21,6 +21,11 @@ resource "aws_instance" "k8s_master" {
   key_name      = var.key_name
   vpc_security_group_ids = [aws_security_group.k8s_sg.id]
 
+  root_block_device {
+    volume_size = 20
+    volume_type = "gp3"
+  }
+
   tags = {
     Name = "k8s-master"
   }
@@ -34,6 +39,11 @@ resource "aws_instance" "k8s_worker" {
   key_name      = var.key_name
   vpc_security_group_ids = [aws_security_group.k8s_sg.id]
 
+  root_block_device {
+    volume_size = 20
+    volume_type = "gp3"
+  }
+
   tags = {
     Name = "k8s-worker-${count.index}"
   }
@@ -45,6 +55,11 @@ resource "aws_instance" "jenkins" {
   subnet_id     = aws_subnet.public.id
   key_name      = var.key_name
   vpc_security_group_ids = [aws_security_group.k8s_sg.id]
+
+  root_block_device {
+    volume_size = 20
+    volume_type = "gp3"
+  }
 
   tags = {
     Name = "jenkins-server"

@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sync-worker
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sync-worker
+  template:
+    metadata:
+      labels:
+        app: sync-worker
+    spec:
+      containers:
+      - name: sync-worker
+        image: bitslasher1003/stock-sync-worker:latest
+        env:
+        - name: DATABASE_URL
+          value: "postgresql://myuser:mypassword@db:5432/stock_screener"
+        - name: SYNC_INTERVAL
+          value: "3600"

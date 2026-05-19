@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: stock-backend
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: stock-backend
+  template:
+    metadata:
+      labels:
+        app: stock-backend
+    spec:
+      containers:
+      - name: stock-backend
+        image: bitslasher1003/stock-backend:latest
+        ports:
+        - containerPort: 8000
+        env:
+        - name: DATABASE_URL
+          value: "postgresql://myuser:mypassword@db:5432/stock_screener"
+        - name: LLM_SERVICE_URL
+          value: "http://llm-service:8001"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend
+spec:
+  selector:
+    app: stock-backend
+  ports:
+  - port: 8000
+    targetPort: 8000

@@ -9,11 +9,65 @@ services:
       - "5433:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U myuser -d stock_screener"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
   redis:
     image: redis:7
     ports:
       - "6379:6379"
+
+  llm-service:
+    build:
+      context: ./services/llm_service
+      dockerfile: Dockerfile
+    environment:
+      - GEMINI_API_KEY=${GEMINI_API_KEY}
+    ports:
+      - "8001:8001"
+
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile.backend
+    environment:
+      - DATABASE_URL=postgresql://myuser:mypassword@db:5432/stock_screener
+      - REDIS_URL=redis://redis:6379/0
+      - LLM_SERVICE_URL=http://llm-service:8001
+    ports:
+      - "8000:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_started
+      llm-service:
+        condition: service_started
+
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+    environment:
+      - API_URL=http://backend:8000
+    ports:
+      - "8501:8501"
+    depends_on:
+      - backend
+
+  sync-worker:
+    build:
+      context: ./services/data_sync_worker
+      dockerfile: Dockerfile
+    environment:
+      - DATABASE_URL=postgresql://myuser:mypassword@db:5432/stock_screener
+      - SYNC_INTERVAL=3600
+    depends_on:
+      db:
+        condition: service_healthy
 
 volumes:
   postgres_data:

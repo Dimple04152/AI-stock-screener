@@ -1,11 +1,12 @@
+import os
 import streamlit as st
 import requests
 import pandas as pd
 import plotly.express as px
 import yfinance as yf
 
-# Port 8000 is our FastAPI backend port
-API_URL = "http://localhost:8000"
+# Use environment variable for Docker compatibility
+API_URL = os.getenv("API_URL", "http://localhost:8000")
 
 st.set_page_config(page_title="AI-Powered Stock Screener", layout="wide", page_icon="📈")
 

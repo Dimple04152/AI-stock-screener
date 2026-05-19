@@ -12,3 +12,4 @@ streamlit
 pandas
 python-dotenv
 yfinance
+plotly

@@ -33,6 +33,7 @@ class Fundamental(Base):
     eps = Column(Float, nullable=True)
     market_cap = Column(Float, nullable=True)
     revenue_growth = Column(Float, nullable=True)
+    updated_at = Column(DateTime, default=datetime.datetime.utcnow, onupdate=datetime.datetime.utcnow)
 
     company = relationship("Symbol", back_populates="fundamentals")
 

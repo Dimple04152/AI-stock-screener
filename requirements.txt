@@ -13,3 +13,4 @@ pandas
 python-dotenv
 yfinance
 plotly
+prometheus-fastapi-instrumentator

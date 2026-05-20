@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from database import engine, Base
 from backend.routes import auth, query, portfolio, alerts, companies
+from prometheus_fastapi_instrumentator import Instrumentator
 
 # Create database tables
 Base.metadata.create_all(bind=engine)
@@ -22,6 +23,10 @@ app.include_router(portfolio.router)
 app.include_router(alerts.router)
 app.include_router(companies.router)
 
+# Instrument the app
+Instrumentator().instrument(app).expose(app)
+
 @app.get("/")
 def read_root():
     return {"message": "Welcome to the AI-Powered Stock Screener API"}
+

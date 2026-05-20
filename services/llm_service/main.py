@@ -2,6 +2,7 @@ from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from parser import parse_query_to_dsl
 from dsl.validator import validate_dsl
+from prometheus_fastapi_instrumentator import Instrumentator
 
 app = FastAPI(title="LLM Query Microservice")
 
@@ -22,3 +23,7 @@ def parse_query(request: QueryRequest):
 @app.get("/health")
 def health_check():
     return {"status": "healthy"}
+
+# Instrument the app for Prometheus metrics
+Instrumentator().instrument(app).expose(app)
+

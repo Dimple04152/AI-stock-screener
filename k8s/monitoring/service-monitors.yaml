@@ -1,0 +1,29 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: stock-backend-monitor
+  labels:
+    release: monitoring
+spec:
+  selector:
+    matchLabels:
+      app: stock-backend
+  endpoints:
+  - port: http
+    path: /metrics
+    interval: 15s
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: llm-service-monitor
+  labels:
+    release: monitoring
+spec:
+  selector:
+    matchLabels:
+      app: llm-service
+  endpoints:
+  - port: http
+    path: /metrics
+    interval: 15s
